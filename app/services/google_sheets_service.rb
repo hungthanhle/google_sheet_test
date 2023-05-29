@@ -13,19 +13,20 @@ class GoogleSheetsService
 
   def insert
     spreadsheet_id = ENV['SPREADSHEETS_ID'] #not worksheet S
-    # source_sheet_id = ENV['TEMPLATE_ID'] ?? original ??
-    
-    # HÀNH ĐỘNG 1: create new worksheet in spreadsheet(s)
     spreadsheet = @service.get_spreadsheet(spreadsheet_id)
-    # worksheet = spreadsheet.worksheets.first
-    # spreadsheet_properties = spreadsheet.sheets.find { |sheet| sheet.properties.sheet_id == source_sheet_id.to_i }.properties ??
-    new_sheet_name = Time.now.strftime('%d/%m/%Y %H:%M')
+
+    # HÀNH ĐỘNG 1: STILL INSERT NEW SHEET => NOT RENAME LAST SHEET
+    rewrite_sheet = spreadsheet.sheets.last
+    rewrite_sheet_id = rewrite_sheet.instance_variable_get('@properties').instance_variable_get('@sheet_id') #ENV['TEMPLATE_ID'] ?? original ??
+    # spreadsheet_properties = spreadsheet.sheets.find { |sheet| sheet.properties.sheet_id == rewrite_sheet_id.to_i }.properties
+
+    rewrite_sheet_name = Time.now.strftime('%d/%m/%Y %H:%M')
     requests = [
       {
         duplicate_sheet: {
-          # source_sheet_id: source_sheet_id,
-          new_sheet_name: new_sheet_name,
-          insert_sheet_index: spreadsheet.sheets.count + 1
+          source_sheet_id: rewrite_sheet_id,
+          new_sheet_name: rewrite_sheet_name
+          # insert_sheet_index: spreadsheet.sheets.count + 1
         }
       }
     ]
@@ -36,7 +37,7 @@ class GoogleSheetsService
     spreadsheet = @service.get_spreadsheet(spreadsheet_id)
     new_sheet_id = nil
     spreadsheet.sheets.each do |sheet|
-      if sheet.properties.title == new_sheet_name
+      if sheet.properties.title == rewrite_sheet_name
         new_sheet_id = sheet.properties.sheet_id
         break
       end
@@ -46,7 +47,7 @@ class GoogleSheetsService
       {
         copy_paste: {
           source: {
-            # sheet_id: sourcesheet_id,
+            sheet_id: rewrite_sheet_id,
           },
           destination: {
             sheet_id: new_sheet_id
@@ -62,7 +63,7 @@ class GoogleSheetsService
     # HÀNH ĐỘNG 3
     spreadsheet = @service.get_spreadsheet(spreadsheet_id)
     clear_request_body = Google::Apis::SheetsV4::ClearValuesRequest.new
-    @service.clear_values(spreadsheet_id, "#{new_sheet_name}!A1:L1000", clear_request_body)
+    @service.clear_values(spreadsheet_id, "#{rewrite_sheet_name}!A1:L1000", clear_request_body)
 
   end
 end
