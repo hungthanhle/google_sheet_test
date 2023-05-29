@@ -31,6 +31,8 @@
 
 # Ignore master key for decrypting credentials and more.
 /config/master.key
+/config/rails-tutorail.json
+/config/application.yml
 
 /public/packs
 /public/packs-test
