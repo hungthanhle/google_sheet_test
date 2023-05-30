@@ -7,6 +7,7 @@ class TimesheetCronsController < ApplicationController
 
   # POST  /timesheet_crons/import_data?date=&timekeeper_data=
   def import_data
+    # BẮN POST LÊN: timekeeper_data GỒM time_in, time_out
     SyncDataTimeKeeperService.new(date: params[:date].to_date, timekeeper_data: JSON.parse(params[:timekeeper_data])).perform
 
     render json: {
