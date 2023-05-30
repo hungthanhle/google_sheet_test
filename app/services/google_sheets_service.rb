@@ -23,6 +23,21 @@ class GoogleSheetsService
     copy_paste_action(template_sheet_id, new_sheet_id)
     # debugger
     truncate_value(new_sheet_name, "A1", "L1000")
+
+    header = ["MSV", "Họ và tên", "Ngày sinh", "Khoa", "Lớp", "Chỉ số",	"Ghi chú"]
+    values = [header]
+    row_data = [
+      "0",
+      "Hùng",
+      "99",
+      "Điện",
+      "Automation",
+      "1000000",
+      "Good"
+    ]
+    values << row_data
+    # debugger
+    insert_values(new_sheet_name, values)
   end
 
   def new_sheet_with_template template_sheet_id
@@ -80,5 +95,17 @@ class GoogleSheetsService
     spreadsheet_id = @spreadsheet.spreadsheet_id
     clear_request_body = Google::Apis::SheetsV4::ClearValuesRequest.new
     @service.clear_values(spreadsheet_id, "#{sheet_name}!#{from}:#{to}", clear_request_body)
+  end
+
+  def insert_values sheet_name, values
+    value_range = Google::Apis::SheetsV4::ValueRange.new(values: values)
+    range = "#{sheet_name}!A1:L#{values.count}"
+    spreadsheet_id = @spreadsheet.spreadsheet_id
+    response = @service.update_spreadsheet_value(
+      spreadsheet_id,
+      range,
+      value_range,
+      value_input_option: 'USER_ENTERED'
+    )
   end
 end
