@@ -26,16 +26,21 @@ class GoogleSheetsService
 
     header = ["MSV", "Họ và tên", "Ngày sinh", "Khoa", "Lớp", "Chỉ số",	"Ghi chú"]
     values = [header]
-    row_data = [
-      "0",
-      "Hùng",
-      "99",
-      "Điện",
-      "Automation",
-      "1000000",
-      "Good"
-    ]
+    row_data = ["0", "Hùng", "99", "Điện", "Automation", "1000000", "Good"]
     values << row_data
+    # draft input
+    1.upto(17) do |n|
+      row_data = [
+        Array.new(3){[*"A".."Z",*"a".."z", *"0".."9"].sample}.join,
+        Array.new(5){[*"A".."Z",*"a".."z", *"0".."9"].sample}.join,
+        Array.new(4){[*"0".."9"].sample}.join,
+        Array.new(20){[*"A".."Z",*"a".."z", *"0".."9"].sample}.join,
+        Array.new(20){[*"A".."Z",*"a".."z", *"0".."9"].sample}.join,
+        Array.new(7){[*"0".."9"].sample}.join,
+        Array.new(20){[*"A".."Z",*"a".."z", *"0".."9"].sample}.join,
+      ]
+      values << row_data
+    end 
     # debugger
     insert_values(new_sheet_name, values)
   end
