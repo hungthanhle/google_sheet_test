@@ -1,0 +1,9 @@
+# p = Axlsx::Package.new
+p = xlsx_package
+p.workbook.add_worksheet(:name => "Basic Worksheet") do |sheet|
+  # sheet.add_row ["First Column", "Second", "Third"]
+  # sheet.add_row [1, 2, 3]
+  sheet.add_row ["Simple TABLE"]
+  %w(hàng_1 hàng_2 hàng_3).each { |label| sheet.add_row [label, rand(24)+1] }
+end
+p.use_shared_strings = true

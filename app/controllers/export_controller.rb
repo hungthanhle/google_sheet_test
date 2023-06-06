@@ -18,15 +18,15 @@ class ExportController < ApplicationController
   def files
     # render json: {a:1}
     set_up = "test_file"
-    p = Axlsx::Package.new
-    p.workbook.add_worksheet(:name => "Basic Worksheet") do |sheet|
-      # sheet.add_row ["First Column", "Second", "Third"]
-      # sheet.add_row [1, 2, 3]
-      sheet.add_row ["Simple TABLE"]
-      %w(hàng_1 hàng_2 hàng_3).each { |label| sheet.add_row [label, rand(24)+1] }
-    end
-    p.use_shared_strings = true
+    
     # p.serialize('simple1.xlsx')
-    send_data p.to_stream.read, type: "application/xlsx", filename: "simple2.xlsx"
+    # send_data p.to_stream.read, type: "application/xlsx", filename: "simple2.xlsx"
+
+    # "/download.xlsx"
+    render xlsx: 'download', filename: "simple3.xlsx" #fianally work
+    # respond_to do |format| 
+    #   # format.xlsx
+    #   format.xlsx {render xlsx: 'download',filename: "simple3.xlsx"}
+    # end
   end
 end
