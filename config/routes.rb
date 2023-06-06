@@ -8,4 +8,6 @@ Rails.application.routes.draw do
       post :import_data
     end
   end
+
+  get 'download', to: 'export#files'
 end
